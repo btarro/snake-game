@@ -3,3 +3,61 @@ body {
   color: grey;
   font-family: ubuntu;
 }
+
+h3 {
+  font-family: "Arcade Interlaced";
+  color: yellow;
+}
+
+@font-face {
+  font-family: "Arcade Interlaced";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Arcade Interlaced"), url("assets/fonts/ARCADE_I.woff") format("woff"); */
+}
+
+@font-face {
+  font-family: "Arcade Normal";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Arcade Normal"), url("assets/fonts/ARCADE_N.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Arcade Rounded";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Arcade Rounded"), url("/assets/fonts/ARCADE_R.woff") format("woff");
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  /* background-color: blue; */
+  border-style: solid;
+}
+
+#game-container>h1 {
+  border-style: solid;
+  
+}
+
+#game-elements {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  width: 700px;
+  background-color: black;
+  background-image: url("assets/marquee.jpg");
+
+}
+
+#game-canvas {
+  background-color: white;
+}
