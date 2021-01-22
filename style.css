@@ -13,7 +13,8 @@ h3 {
   font-family: "Arcade Interlaced";
   font-style: normal;
   font-weight: normal;
-  src: local("Arcade Interlaced"), url("assets/fonts/ARCADE_I.woff") format("woff"); */
+  src: local("Arcade Interlaced"),
+    url("assets/fonts/ARCADE_I.woff") format("woff");
 }
 
 @font-face {
@@ -27,7 +28,8 @@ h3 {
   font-family: "Arcade Rounded";
   font-style: normal;
   font-weight: normal;
-  src: local("Arcade Rounded"), url("/assets/fonts/ARCADE_R.woff") format("woff");
+  src: local("Arcade Rounded"),
+    url("/assets/fonts/ARCADE_R.woff") format("woff");
 }
 
 #app-container {
@@ -41,9 +43,8 @@ h3 {
   border-style: solid;
 }
 
-#game-container>h1 {
+#game-container > h1 {
   border-style: solid;
-  
 }
 
 #game-elements {
@@ -55,7 +56,6 @@ h3 {
   width: 700px;
   background-color: black;
   background-image: url("assets/marquee.jpg");
-
 }
 
 #game-canvas {
