@@ -28,6 +28,36 @@
 
 let canvas;
 let canvasContext;
+let wormX = 250;
+let wormY = 250;
+let wormHeight = 20;
+let wormLength = 20;
+let wormGrow = 20;
+let wormSpeed = 1;
+let lastMove = "ArrowRight";
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "ArrowUp") {
+    moveUp();
+    lastMove = e.code;
+  }
+  if (e.code === "ArrowDown") {
+    moveDown();
+    lastMove = e.code;
+  }
+  if (e.code === "ArrowLeft") {
+    moveLeft();
+    lastMove = e.code;
+  }
+  if (e.code === "ArrowRight") {
+    moveRight();
+    lastMove = e.code;
+  }
+  // Test for apple
+  if (e.code === "KeyG") {
+    wormLength = wormLength + wormGrow;
+  }
+});
 
 window.onload = function () {
   canvas = document.getElementById("game-canvas");
@@ -41,10 +71,23 @@ window.onload = function () {
 };
 
 function drawEverything() {
-  worm(250, 250, 20, 20, "white");
+  colorRect(0, 0, canvas.width, canvas.height, "black");
+  worm(wormX, wormY, wormHeight, wormLength, "white");
 }
 function moveEverything() {
-  canvas.addEventListener("keyup", test);
+  //console.log(lastMove);
+  if (lastMove == "ArrowRight") {
+    wormX = wormX + wormSpeed;
+  }
+  if (lastMove == "ArrowLeft") {
+    wormX = wormX - wormSpeed;
+  }
+  if (lastMove == "ArrowUp") {
+    wormY = wormY - wormSpeed;
+  }
+  if (lastMove == "ArrowDown") {
+    wormY = wormY + wormSpeed;
+  }
 }
 
 function worm(leftX, topY, width, height, drawColor) {
@@ -52,6 +95,31 @@ function worm(leftX, topY, width, height, drawColor) {
   canvasContext.fillRect(leftX, topY, width, height);
 }
 
-function test(e) {
-  console.log("IS this working?");
+// MOVEMENT ARROWS
+function moveUp() {
+  if (wormY > 0) {
+    wormY = wormY - wormLength;
+  }
 }
+function moveDown() {
+  if (wormY < canvas.height - wormHeight) {
+    wormY = wormY + wormLength;
+  }
+}
+function moveLeft() {
+  if (wormX > 0) {
+    wormX = wormX - wormLength;
+  }
+}
+function moveRight() {
+  if (wormX < canvas.width - wormHeight) {
+    wormX = wormX + wormLength;
+  }
+}
+
+// CARRY OVER - Drawing the Canvas
+
+function colorRect(leftX, topY, width, height, drawColor) {
+  canvasContext.fillStyle = drawColor;
+  canvasContext.fillRect(leftX, topY, width, height);
+} // X,Y
