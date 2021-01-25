@@ -4,8 +4,8 @@ let wormX = 200;
 let wormY = 200;
 let wormHeight = 20;
 let wormLength = 20;
-let wormSpeed = 5;
-let lastMove = "ArrowRight";
+let wormSpeed = 3;
+let lastMove = "";
 
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowUp") {
@@ -26,7 +26,12 @@ document.addEventListener("keydown", (e) => {
   }
   // Test for apple DELETEME
   if (e.code === "KeyG") {
-    wormBody.push({ posX: wormX, posY: wormY, wormHeight, wormLength });
+    wormBody.push({
+      posX: wormX + 200,
+      posY: wormY + 200,
+      wormHeight,
+      wormLength,
+    });
   }
 });
 
@@ -34,7 +39,7 @@ window.onload = function () {
   canvas = document.getElementById("game-canvas");
   canvasContext = canvas.getContext("2d");
 
-  var framesPerSecond = 30;
+  var framesPerSecond = 60;
   setInterval(function () {
     moveEverything();
     drawEverything();
@@ -53,7 +58,7 @@ function moveEverything() {
   // REPLACE WITH FOR EACH DELETEME
   if (lastMove == "ArrowRight") {
     if (wormX < canvas.width - wormHeight) {
-      wormX = wormX + wormSpeed;
+      wormX = wormBody[0].posX + wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
       wormBody.pop();
     } else {
@@ -61,9 +66,10 @@ function moveEverything() {
       lastMove = "";
     }
   }
+
   if (lastMove == "ArrowLeft") {
     if (wormX > 0) {
-      wormX = wormX - wormSpeed;
+      wormX = wormBody[0].posX - wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
       wormBody.pop();
     } else {
@@ -74,7 +80,7 @@ function moveEverything() {
 
   if (lastMove == "ArrowUp") {
     if (wormY > 0) {
-      wormY = wormY - wormSpeed;
+      wormY = wormBody[0].posY - wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
       wormBody.pop();
     } else {
@@ -82,9 +88,10 @@ function moveEverything() {
       lastMove = "";
     }
   }
+
   if (lastMove == "ArrowDown") {
     if (wormY < canvas.height - wormHeight) {
-      wormY = wormY + wormSpeed;
+      wormY = wormBody[0].posY + wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
       wormBody.pop();
     } else {
@@ -117,13 +124,11 @@ function moveRight() {
     wormX = wormX + wormLength;
   }
 }
-// xx
-//xx
-// Let's move the worm information into an object
+
 let wormBody = [
   { posX: 200, posY: 200, height: wormHeight, length: wormLength },
-  { posX: 220, posY: 200, height: wormHeight, length: wormLength },
-  { posX: 240, posY: 200, height: wormHeight, length: wormLength },
+  // { posX: 220, posY: 200, height: wormHeight, length: wormLength },
+  // { posX: 240, posY: 200, height: wormHeight, length: wormLength },
 ];
 
 function worm(leftX, topY, width, height, drawColor) {
@@ -135,7 +140,3 @@ function colorRect(leftX, topY, width, height, drawColor) {
   canvasContext.fillStyle = drawColor;
   canvasContext.fillRect(leftX, topY, width, height);
 }
-
-// Each segment assumes the position of the last segment
-// each draw advances amount based on variable.
-// each previous segement (array element) changes variables to segment ahead of itself.
