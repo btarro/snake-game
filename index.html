@@ -14,16 +14,21 @@
   <body>
     <div id="app-container">
       <div id="game-elements">
-        <div id="score">
-          <h3>SCORE:00000</h3>
+        <div id="marquee">
+          <h1 class="marquee">SPACEWORM</h1>
         </div>
         <div id="game-container">
-          <h1 class="left-marquee">SPACE</h1>
+          <!-- <h1 class="left-marquee">SPACE</h1> -->
           <canvas id="game-canvas" width="500" height="500"></canvas>
-          <h1 class="right-marquee">WORM</h1>
+          <!-- <h1 class="right-marquee">WORM</h1> -->
         </div>
-        <div id="hi-score">
-          <h3>HI SCORE:00000</h3>
+        <div id="score">
+          <div id="game-score">
+            <h3 class="game-score">Game Score:00000</h3>
+          </div>
+          <div id="high-score">
+            <h3 class="high-score">High Score:00000</h3>
+          </div>
         </div>
       </div>
     </div>

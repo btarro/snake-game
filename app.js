@@ -1,37 +1,48 @@
+const wormHeight = 20;
+const wormWidth = 20;
+const wormSpeed = 3;
+const wormGrow = 6;
+
 let canvas;
 let canvasContext;
 let wormX = 200;
 let wormY = 200;
-let wormHeight = 20;
-let wormLength = 20;
-let wormSpeed = 3;
 let lastMove = "";
+let wormBody = [
+  { posX: 200, posY: 200, height: wormHeight, length: wormWidth },
+];
+
+// NYI
+let isX = false;
+let isY = false;
 
 document.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowUp") {
+  if (e.code === "ArrowUp" && !isY) {
     moveUp();
     lastMove = e.code;
   }
-  if (e.code === "ArrowDown") {
+  if (e.code === "ArrowDown" && !isY) {
     moveDown();
     lastMove = e.code;
   }
-  if (e.code === "ArrowLeft") {
+  if (e.code === "ArrowLeft" && !isX) {
     moveLeft();
     lastMove = e.code;
   }
-  if (e.code === "ArrowRight") {
+  if (e.code === "ArrowRight" && !isX) {
     moveRight();
     lastMove = e.code;
   }
   // Test for apple DELETEME
   if (e.code === "KeyG") {
-    wormBody.push({
-      posX: wormX + 200,
-      posY: wormY + 200,
-      wormHeight,
-      wormLength,
-    });
+    let segments = 1;
+    while (segments < wormGrow) {
+      wormBody.push({
+        posX: wormX,
+        posY: wormY,
+      });
+      segments++;
+    }
   }
 });
 
@@ -43,42 +54,22 @@ window.onload = function () {
   setInterval(function () {
     moveEverything();
     drawEverything();
+    detectCollision();
   }, 1000 / framesPerSecond);
 };
 
 function drawEverything() {
   colorRect(0, 0, canvas.width, canvas.height, "black");
-  //worm(wormX, wormY, wormHeight, wormLength, "white");
   wormBody.forEach((wormBodyPart) => {
-    worm(wormBodyPart.posX, wormBodyPart.posY, wormHeight, wormLength, "white");
+    worm(wormBodyPart.posX, wormBodyPart.posY, wormHeight, wormWidth, "white");
   });
 }
 
 function moveEverything() {
   // REPLACE WITH FOR EACH DELETEME
-  if (lastMove == "ArrowRight") {
-    if (wormX < canvas.width - wormHeight) {
-      wormX = wormBody[0].posX + wormSpeed;
-      wormBody.unshift({ posX: wormX, posY: wormY });
-      wormBody.pop();
-    } else {
-      console.log("right side collision");
-      lastMove = "";
-    }
-  }
-
-  if (lastMove == "ArrowLeft") {
-    if (wormX > 0) {
-      wormX = wormBody[0].posX - wormSpeed;
-      wormBody.unshift({ posX: wormX, posY: wormY });
-      wormBody.pop();
-    } else {
-      console.log("left side collision");
-      lastMove = "";
-    }
-  }
-
   if (lastMove == "ArrowUp") {
+    isX = false;
+    isY = true;
     if (wormY > 0) {
       wormY = wormBody[0].posY - wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
@@ -90,6 +81,8 @@ function moveEverything() {
   }
 
   if (lastMove == "ArrowDown") {
+    isX = false;
+    isy = true;
     if (wormY < canvas.height - wormHeight) {
       wormY = wormBody[0].posY + wormSpeed;
       wormBody.unshift({ posX: wormX, posY: wormY });
@@ -99,37 +92,57 @@ function moveEverything() {
       lastMove = "";
     }
   }
+
+  if (lastMove == "ArrowLeft") {
+    isX = true;
+    isY = false;
+    if (wormX > 0) {
+      wormX = wormBody[0].posX - wormSpeed;
+      wormBody.unshift({ posX: wormX, posY: wormY });
+      wormBody.pop();
+    } else {
+      console.log("left side collision");
+      lastMove = "";
+    }
+  }
+
+  if (lastMove == "ArrowRight") {
+    isX = true;
+    isY = false;
+    if (wormX < canvas.width - wormWidth) {
+      wormX = wormBody[0].posX + wormSpeed;
+      wormBody.unshift({ posX: wormX, posY: wormY });
+      wormBody.pop();
+    } else {
+      console.log("right side collision");
+      lastMove = "";
+    }
+  }
 }
 
 function moveUp() {
   if (wormY > 0) {
-    wormY = wormY - wormLength;
+    wormY = wormY - wormHeight;
   }
 }
 
 function moveDown() {
   if (wormY < canvas.height - wormHeight) {
-    wormY = wormY + wormLength;
+    wormY = wormY + wormHeight;
   }
 }
 
 function moveLeft() {
   if (wormX > 0) {
-    wormX = wormX - wormLength;
+    wormX = wormX - wormWidth;
   }
 }
 
 function moveRight() {
-  if (wormX < canvas.width - wormHeight) {
-    wormX = wormX + wormLength;
+  if (wormX < canvas.width - wormWidth) {
+    wormX = wormX + wormWidth;
   }
 }
-
-let wormBody = [
-  { posX: 200, posY: 200, height: wormHeight, length: wormLength },
-  // { posX: 220, posY: 200, height: wormHeight, length: wormLength },
-  // { posX: 240, posY: 200, height: wormHeight, length: wormLength },
-];
 
 function worm(leftX, topY, width, height, drawColor) {
   canvasContext.fillStyle = drawColor;
@@ -140,3 +153,25 @@ function colorRect(leftX, topY, width, height, drawColor) {
   canvasContext.fillStyle = drawColor;
   canvasContext.fillRect(leftX, topY, width, height);
 }
+
+function detectCollision() {
+  for (i = 1; i < wormBody.length; i++) {
+    if (wormBody[i] === wormBody[0]) {
+      console.log("Collision");
+    }
+  }
+}
+// TODO
+
+// Add Random Asteroid
+// Add Asteroid Collision
+// Add "Grow" upon eating asteroid
+
+// add self collision
+// Add Start Screen
+// High Score
+// Add Game Over screen
+// High Score
+// restructure
+
+// Is wormX <
