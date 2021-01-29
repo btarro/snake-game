@@ -10,7 +10,8 @@ let wormY = 200;
 let lastMove = "";
 let isX = false;
 let isY = false;
-let isJunk = true;
+let score = 000000;
+let highScore = 00000;
 
 let wormBody = [
   { posX: 200, posY: 200, height: wormHeight, length: wormWidth },
@@ -53,26 +54,25 @@ window.onload = function () {
   var framesPerSecond = 60;
   setInterval(function () {
     moveEverything();
+    collisionCheck();
     drawEverything();
   }, 1000 / framesPerSecond);
 };
 
 function drawEverything() {
-  colorRect(0, 0, canvas.width, canvas.height, "black");
-  if (!crashCheck()) {
-    wormBody.forEach((wormBodyPart) => {
-      worm(
-        wormBodyPart.posX,
-        wormBodyPart.posY,
-        wormHeight,
-        wormWidth,
-        "white"
-      );
-    });
-  } else {
-    console.log("GAME OVER FUNCTION");
-  }
-  junk(
+  gameObj(0, 0, canvas.width, canvas.height, "black");
+
+  wormBody.forEach((wormBodyPart) => {
+    gameObj(
+      wormBodyPart.posX,
+      wormBodyPart.posY,
+      wormHeight,
+      wormWidth,
+      "white"
+    );
+  });
+
+  gameObj(
     spaceJunk.posX,
     spaceJunk.posY,
     spaceJunk.height,
@@ -153,38 +153,20 @@ function moveEverything() {
       lastMove = "";
     }
   }
-
-  // if (lastMove != "ArrowRight" || "ArrowLeft" || "ArrowUp" || "ArrowDown") {
-  //   //console.log(lastMove);
-  //   //lastMove = "";
-  // }
 }
 
-function worm(leftX, topY, width, height, drawColor) {
-  canvasContext.fillStyle = drawColor;
-  canvasContext.fillRect(leftX, topY, width, height);
+function collisionCheck() {
+  selfCrash();
+  consumeJunk();
 }
 
-function junk(leftX, topY, height, width, drawColor) {
-  if (isJunk) {
-    canvasContext.fillStyle = drawColor;
-    canvasContext.fillRect(leftX, topY, width, height);
-    isJunk = true;
-    //console.log("how many junks");
-  }
-}
-
-function colorRect(leftX, topY, width, height, drawColor) {
-  canvasContext.fillStyle = drawColor;
-  canvasContext.fillRect(leftX, topY, width, height);
-}
-
-function crashCheck() {
+function selfCrash() {
   for (i = 1; i < wormBody.length; i++) {
     let headBottom = wormBody[0].posY;
     let headLeft = wormBody[0].posX;
     let headRight = wormBody[0].posX;
     let headTop = wormBody[0].posY;
+
     let segBottom = wormBody[i].posY;
     let segLeft = wormBody[i].posX;
     let segRight = wormBody[i].posX;
@@ -203,26 +185,62 @@ function crashCheck() {
   }
 }
 
+function consumeJunk() {
+  let headBottom = wormBody[0].posY + wormBody[0].height;
+  let headLeft = wormBody[0].posX;
+  let headRight = wormBody[0].posX + wormBody[0].width;
+  let headTop = wormBody[0].posY;
+
+  if (
+    headTop > spaceJunk.posY + spaceJunk.height ||
+    headRight < spaceJunk.posX ||
+    headBottom < spaceJunk.posY ||
+    headLeft > spaceJunk.posX + spaceJunk.width
+  ) {
+  } else {
+    newJunk();
+    let segments = 1;
+    while (segments < wormGrow) {
+      wormBody.push({
+        posX: wormX,
+        posY: wormY,
+        height: wormHeight,
+        length: wormWidth,
+      });
+      segments++;
+    }
+  }
+}
+
+function newJunk() {
+  spaceJunk = { posX: 400, posY: 2, height: wormHeight, width: wormWidth };
+}
+
+function gameObj(leftX, topY, width, height, drawColor) {
+  canvasContext.fillStyle = drawColor;
+  canvasContext.fillRect(leftX, topY, width, height);
+}
+
 // TODO
-//------
+// ------
 // Random Junk
 // Grow Worm Based on Apple
 // Start Screen
 // Game Over Screen
 
 // Groupings
-//-----------
+// -----------
 
 // Event Listener
 //    Keep this small and essential as possible
 
 // draw / render
-//    This function should draw everything on screen based on movement
+//    This function should draw objects on screen based on movement
 
 // movement
 //    perform movement calculations for screen, worm, apple
 
-//  collision detection
+// collision detection
 //    Self
 //        Game Over Screen
 //    spaceJunk
