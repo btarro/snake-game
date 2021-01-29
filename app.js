@@ -10,26 +10,25 @@ let wormY = 200;
 let lastMove = "";
 let isX = false;
 let isY = false;
+let isJunk = true;
 
 let wormBody = [
   { posX: 200, posY: 200, height: wormHeight, length: wormWidth },
 ];
 
+let spaceJunk = { posX: 100, posY: 100, height: wormHeight, width: wormWidth };
+
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowUp" && !isY) {
-    moveUp();
     lastMove = e.code;
   }
   if (e.code === "ArrowDown" && !isY) {
-    moveDown();
     lastMove = e.code;
   }
   if (e.code === "ArrowLeft" && !isX) {
-    moveLeft();
     lastMove = e.code;
   }
   if (e.code === "ArrowRight" && !isX) {
-    moveRight();
     lastMove = e.code;
   }
   // Test for asteroid DELETEME
@@ -60,14 +59,29 @@ window.onload = function () {
 
 function drawEverything() {
   colorRect(0, 0, canvas.width, canvas.height, "black");
-  wormBody.forEach((wormBodyPart) => {
-    worm(wormBodyPart.posX, wormBodyPart.posY, wormHeight, wormWidth, "white");
-    crashCheck();
-  });
+  if (!crashCheck()) {
+    wormBody.forEach((wormBodyPart) => {
+      worm(
+        wormBodyPart.posX,
+        wormBodyPart.posY,
+        wormHeight,
+        wormWidth,
+        "white"
+      );
+    });
+  } else {
+    console.log("GAME OVER FUNCTION");
+  }
+  junk(
+    spaceJunk.posX,
+    spaceJunk.posY,
+    spaceJunk.height,
+    spaceJunk.width,
+    "green"
+  );
 }
 
 function moveEverything() {
-  // REPLACE WITH FOR EACH DELETEME
   if (lastMove == "ArrowUp") {
     isX = false;
     isY = true;
@@ -91,7 +105,12 @@ function moveEverything() {
     isY = true;
     if (wormY < canvas.height - wormHeight) {
       wormY = wormBody[0].posY + wormSpeed;
-      wormBody.unshift({ posX: wormX, posY: wormY, wormHeight, wormWidth });
+      wormBody.unshift({
+        posX: wormX,
+        posY: wormY,
+        height: wormHeight,
+        width: wormWidth,
+      });
       wormBody.pop();
     } else {
       console.log("bottom collision");
@@ -104,7 +123,12 @@ function moveEverything() {
     isY = false;
     if (wormX > 0) {
       wormX = wormBody[0].posX - wormSpeed;
-      wormBody.unshift({ posX: wormX, posY: wormY, wormHeight, wormWidth });
+      wormBody.unshift({
+        posX: wormX,
+        posY: wormY,
+        height: wormHeight,
+        width: wormWidth,
+      });
       wormBody.pop();
     } else {
       console.log("left side collision");
@@ -117,42 +141,37 @@ function moveEverything() {
     isY = false;
     if (wormX < canvas.width - wormWidth) {
       wormX = wormBody[0].posX + wormSpeed;
-      wormBody.unshift({ posX: wormX, posY: wormY, wormHeight, wormWidth });
+      wormBody.unshift({
+        posX: wormX,
+        posY: wormY,
+        height: wormHeight,
+        width: wormWidth,
+      });
       wormBody.pop();
     } else {
       console.log("right side collision");
       lastMove = "";
     }
   }
-}
 
-function moveUp() {
-  if (wormY > 0) {
-    wormY = wormY - wormHeight;
-  }
-}
-
-function moveDown() {
-  if (wormY < canvas.height - wormHeight) {
-    wormY = wormY + wormHeight;
-  }
-}
-
-function moveLeft() {
-  if (wormX > 0) {
-    wormX = wormX - wormWidth;
-  }
-}
-
-function moveRight() {
-  if (wormX < canvas.width - wormWidth) {
-    wormX = wormX + wormWidth;
-  }
+  // if (lastMove != "ArrowRight" || "ArrowLeft" || "ArrowUp" || "ArrowDown") {
+  //   //console.log(lastMove);
+  //   //lastMove = "";
+  // }
 }
 
 function worm(leftX, topY, width, height, drawColor) {
   canvasContext.fillStyle = drawColor;
   canvasContext.fillRect(leftX, topY, width, height);
+}
+
+function junk(leftX, topY, height, width, drawColor) {
+  if (isJunk) {
+    canvasContext.fillStyle = drawColor;
+    canvasContext.fillRect(leftX, topY, width, height);
+    isJunk = true;
+    //console.log("how many junks");
+  }
 }
 
 function colorRect(leftX, topY, width, height, drawColor) {
@@ -162,31 +181,51 @@ function colorRect(leftX, topY, width, height, drawColor) {
 
 function crashCheck() {
   for (i = 1; i < wormBody.length; i++) {
-    // let headBottom = wormBody[0].posY + wormHeight;
     let headBottom = wormBody[0].posY;
     let headLeft = wormBody[0].posX;
-
-    //let headRight = wormBody[0].posX + wormWidth;
     let headRight = wormBody[0].posX;
-
     let headTop = wormBody[0].posY;
-    //let segBottom = wormBody[i].posY + wormHeight;
     let segBottom = wormBody[i].posY;
-
     let segLeft = wormBody[i].posX;
-    // let segRight = wormBody[i].posX + wormWidth;
     let segRight = wormBody[i].posX;
-
     let segTop = wormBody[i].posY;
+
     if (
       headTop > segBottom ||
       headRight < segLeft ||
       headBottom < segTop ||
       headLeft > segRight
     ) {
-      null;
     } else {
-      console.log("CRASH!");
+      console.log("SELF CRASH!");
+      return true;
     }
   }
 }
+
+// TODO
+//------
+// Random Junk
+// Grow Worm Based on Apple
+// Start Screen
+// Game Over Screen
+
+// Groupings
+//-----------
+
+// Event Listener
+//    Keep this small and essential as possible
+
+// draw / render
+//    This function should draw everything on screen based on movement
+
+// movement
+//    perform movement calculations for screen, worm, apple
+
+//  collision detection
+//    Self
+//        Game Over Screen
+//    spaceJunk
+//        Grow worm
+//    Wall
+//        Game over screen
