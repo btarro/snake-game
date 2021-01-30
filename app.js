@@ -1,6 +1,6 @@
 const wormHeight = 20;
 const wormWidth = 20;
-const wormSpeed = 4;
+const wormSpeed = 6;
 const wormGrow = 10;
 const canvas = document.getElementById("game-canvas");
 const canvasContext = canvas.getContext("2d");
@@ -106,7 +106,7 @@ function drawEverything() {
     spaceJunk.posY,
     spaceJunk.height,
     spaceJunk.width,
-    "orange"
+    "red"
   );
 }
 
@@ -203,16 +203,14 @@ function newJunk() {
   let newY = Math.floor(Math.random() * 475 + 1);
 
   for (i = 0; i < wormBody.length; i++) {
-    let segBottom = wormBody[i].posY;
-    let segLeft = wormBody[i].posX;
-    let segRight = wormBody[i].posX;
-    let segTop = wormBody[i].posY;
+    let segX = wormBody[i].posX;
+    let segY = wormBody[i].posY;
 
     if (
-      newX < segLeft + 20 &&
-      newX + 20 > segLeft &&
-      newY < segTop + 20 &&
-      newY + 20 > segTop
+      newX < segX + 20 &&
+      newX + 20 > segX &&
+      newY < segY + 20 &&
+      newY + 20 > segY
     ) {
       newJunk();
     } else {
@@ -300,7 +298,7 @@ function gameOver(type) {
 
   canvasContext.font = "14px Arcade Interlaced";
   canvasContext.fillText(`It turns out..`, canvas.width / 2, 250);
-  canvasContext.fillStyle = "coral";
+  canvasContext.fillStyle = "pink";
   canvasContext.fillText(`${type}`, canvas.width / 2, 290);
   canvasContext.fillStyle = "lightgrey";
   canvasContext.fillText("..is dangerous.", canvas.width / 2, 330);
