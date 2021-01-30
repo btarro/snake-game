@@ -1,22 +1,28 @@
-# A Simple Snake Game App
+# Welcome to DANGER NOODLE! - A "Snake Game" App
 
 ### A pure Javascript take on the classic Snake Game
 
 #### Check it out [here](https://btarro.github.io/snake-game)
 
-<!-- ![](images/calc_README.png) -->
+![](assets/readme-image.png)
 
 ## Summary
 
-WIP
+This app was written using basic HTML (canvas), CSS, and JavaScript (no libraries). The focus of this project was to build a snake game with an ultra-responsive snake and a retro arcade feel.
 
-<!-- This app was written using basic HTML, CSS, and JavaScript (no libraries). The focus of this project was to provide a basic calculator that could perform essential operations such as addition, subtraction, multiplication, and division. Additonally, the calculator can perform continuous operation.
+Features:
 
-In the future I'd like to:
+- Super smooth snake movement and controls
+- score / high-score keeping
+- 'start / attraction' screen
+- 'Game Over' screen
+- Variable tunables (Speed, growth, point value, etc)
 
-- Simplify the logic/lines of code with a custom parser
-- Add memory functionality
-- Support advanced operation -->
+In the future versions I'd like to:
+
+- refactor the logic
+- Store "high-score" beyond the current session
+- Add 'mode-select' and give users access to some of the tunables
 
 ## Author
 

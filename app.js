@@ -1,6 +1,6 @@
 const wormHeight = 20;
 const wormWidth = 20;
-const wormSpeed = 6;
+const wormSpeed = 3;
 const wormGrow = 10;
 const canvas = document.getElementById("game-canvas");
 const canvasContext = canvas.getContext("2d");
@@ -14,6 +14,7 @@ let lastMove = "";
 let isX = false;
 let isY = false;
 let score = 0;
+let junkValue = 25;
 let highScore = 750;
 let gameStarted = false;
 let spaceJunk = {};
@@ -182,7 +183,7 @@ function consumeJunk() {
     headLeft > spaceJunk.posX + spaceJunk.width
   ) {
   } else {
-    score += 25;
+    score += junkValue;
     newJunk();
     scoring();
     let segments = 1;
