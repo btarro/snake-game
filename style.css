@@ -2,6 +2,7 @@ html,
 body {
   color: grey;
   background-color: black;
+  font-family: "Arcade Interlaced";
 }
 
 @font-face {
@@ -11,21 +12,6 @@ body {
   src: local("Arcade Interlaced"),
     url("assets/fonts/ARCADE_I.woff") format("woff");
 }
-
-/* @font-face {
-  font-family: "Arcade Normal";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Arcade Normal"), url("assets/fonts/ARCADE_N.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Arcade Rounded";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Arcade Rounded"),
-    url("/assets/fonts/ARCADE_R.woff") format("woff");
-} */
 
 #app-container {
   display: flex;
@@ -49,23 +35,19 @@ body {
   border-radius: 25px;
 }
 
-#score {
+#scoring {
   display: flex;
   display: row;
   gap: 50px;
   font-size: small;
   color: white;
+  text-shadow: 2px 2px 2px black;
 }
 
 #game-container {
   display: flex;
   flex-direction: row;
 }
-
-/* #game-container > h1 {
-  text-align: center;
-  color: purple;
-} */
 
 #game-canvas {
   background-color: black;
@@ -74,24 +56,13 @@ body {
   border-radius: 25px;
 }
 
+#game-score,
+#high-score {
+  color: yellow;
+}
+
 .marquee {
   font-size: 36px;
-  //letter-spacing: 10px;
   text-shadow: 0px 0px 20px dodgerblue;
   color: white;
 }
-
-/* .left-marquee {
-  writing-mode: tb-rl;
-  transform: rotate(-180deg);
-  font-size: 42px;
-  letter-spacing: 10px;
-  text-shadow: 0px 0px 8px greenyellow;
-}
-
-.right-marquee {
-  writing-mode: vertical-rl;
-  font-size: 42px;
-  letter-spacing: 15px;
-  text-shadow: 0px 0px 8px greenyellow;
-} */

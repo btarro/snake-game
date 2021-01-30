@@ -1,23 +1,23 @@
 const wormHeight = 20;
 const wormWidth = 20;
-const wormSpeed = 5;
+const wormSpeed = 4;
 const wormGrow = 10;
+const canvas = document.getElementById("game-canvas");
+const canvasContext = canvas.getContext("2d");
 
-let canvas;
-let canvasContext;
+let gameEngine;
 let wormX = 200;
 let wormY = 200;
 let lastMove = "";
 let isX = false;
 let isY = false;
-let score = 000000;
-let highScore = 00000;
-
+let score = 0;
+let highScore = 750;
+let gameStarted = false;
+let spaceJunk = {};
 let wormBody = [
   { posX: 200, posY: 200, height: wormHeight, length: wormWidth },
 ];
-
-let spaceJunk = { posX: 100, posY: 100, height: wormHeight, width: wormWidth };
 
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowUp" && !isY) {
@@ -32,32 +32,26 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowRight" && !isX) {
     lastMove = e.code;
   }
-  // Test for asteroid DELETEME
-  if (e.code === "KeyG") {
-    let segments = 1;
-    while (segments < wormGrow) {
-      wormBody.push({
-        posX: wormX,
-        posY: wormY,
-        height: wormHeight,
-        length: wormWidth,
-      });
-      segments++;
-    }
+  if (e.code === "Space" && !gameStarted) {
+    runGame();
   }
 });
 
 window.onload = function () {
-  canvas = document.getElementById("game-canvas");
-  canvasContext = canvas.getContext("2d");
+  start();
+};
 
-  var framesPerSecond = 60;
-  setInterval(function () {
+function runGame() {
+  gameStarted = true;
+  newJunk();
+
+  let framesPerSecond = 60;
+  gameEngine = setInterval(function () {
     moveEverything();
     collisionCheck();
     drawEverything();
   }, 1000 / framesPerSecond);
-};
+}
 
 function drawEverything() {
   gameObj(0, 0, canvas.width, canvas.height, "black");
@@ -68,7 +62,7 @@ function drawEverything() {
       wormBodyPart.posY,
       wormHeight,
       wormWidth,
-      "white"
+      "whitesmoke"
     );
   });
 
@@ -77,7 +71,7 @@ function drawEverything() {
     spaceJunk.posY,
     spaceJunk.height,
     spaceJunk.width,
-    "green"
+    "coral"
   );
 }
 
@@ -172,6 +166,10 @@ function selfCrash() {
     let segRight = wormBody[i].posX;
     let segTop = wormBody[i].posY;
 
+    if (!gameStarted) {
+      return;
+    }
+
     if (
       headTop > segBottom ||
       headRight < segLeft ||
@@ -179,8 +177,7 @@ function selfCrash() {
       headLeft > segRight
     ) {
     } else {
-      console.log("SELF CRASH!");
-      return true;
+      gameOver();
     }
   }
 }
@@ -199,6 +196,7 @@ function consumeJunk() {
   ) {
   } else {
     newJunk();
+    scoring();
     let segments = 1;
     while (segments < wormGrow) {
       wormBody.push({
@@ -213,7 +211,89 @@ function consumeJunk() {
 }
 
 function newJunk() {
-  spaceJunk = { posX: 400, posY: 2, height: wormHeight, width: wormWidth };
+  let newX = Math.floor(Math.random() * 475 + 1);
+  let newY = Math.floor(Math.random() * 475 + 1);
+
+  if (!selfCrash()) {
+    spaceJunk = {
+      posX: newX,
+      posY: newY,
+      height: wormHeight,
+      width: wormWidth,
+    };
+  } else {
+    newJunk();
+  }
+}
+
+function scoring() {
+  score += 25;
+  if (score > highScore) {
+    highScore = score;
+    let pad = "00000";
+    let result = (pad + score).slice(-pad.length);
+    document.getElementById("game-score").textContent = result;
+    document.getElementById("high-score").textContent = result;
+  } else {
+    let pad = "00000";
+    let result = (pad + score).slice(-pad.length);
+    document.getElementById("game-score").textContent = result;
+  }
+}
+
+function start() {
+  gameObj(0, 0, canvas.width, canvas.height, "black");
+  canvasContext.font = "18px Arcade Interlaced";
+  canvasContext.textAlign = "center";
+  canvasContext.fillStyle = "yellowgreen";
+  canvasContext.fillText("* Greetings Nope-Rope *", canvas.width / 2, 100);
+  canvasContext.fillStyle = "white";
+  canvasContext.font = "14px Arcade Interlaced";
+  canvasContext.fillText("You are a Danger Noodle.", canvas.width / 2, 175);
+  canvasContext.fillText(
+    "Danger Noodles do dangerous things.",
+    canvas.width / 2,
+    225
+  );
+  canvasContext.fillText(
+    "Like eating dangerous space junk.",
+    canvas.width / 2,
+    250
+  );
+  canvasContext.fillText("Go be dangerous.", canvas.width / 2, 300);
+  canvasContext.fillStyle = "yellowgreen";
+
+  canvasContext.fillText(
+    "USE ↑ ↓ ← → TO CONTROL NOPE-ROPE",
+    canvas.width / 2,
+    350
+  );
+  canvasContext.font = "18px Arcade Interlaced";
+  canvasContext.fillStyle = "yellow";
+  canvasContext.fillText("* PRESS SPACE TO START *", canvas.width / 2, 450);
+}
+
+function gameOver() {
+  clearInterval(gameEngine);
+  wormX = 200;
+  wormY = 200;
+  lastMove = "";
+  isX = false;
+  isY = false;
+  score = 0;
+  //highScore = 750;
+  gameStarted = false;
+  spaceJunk = {};
+  wormBody = [{ posX: 200, posY: 200, height: wormHeight, length: wormWidth }];
+
+  gameObj(0, 0, canvas.width, canvas.height, "black");
+  canvasContext.font = "24px Arcade Interlaced";
+  canvasContext.textAlign = "center";
+  canvasContext.fillStyle = "red";
+  canvasContext.fillText("GAME OVER", canvas.width / 2, 100);
+  canvasContext.font = "18px Arcade Interlaced";
+  canvasContext.fillStyle = "yellow";
+  canvasContext.fillText("* PRESS SPACE TO TRY AGAIN *", canvas.width / 2, 450);
 }
 
 function gameObj(leftX, topY, width, height, drawColor) {
@@ -221,29 +301,4 @@ function gameObj(leftX, topY, width, height, drawColor) {
   canvasContext.fillRect(leftX, topY, width, height);
 }
 
-// TODO
-// ------
-// Random Junk
-// Grow Worm Based on Apple
-// Start Screen
-// Game Over Screen
-
-// Groupings
-// -----------
-
-// Event Listener
-//    Keep this small and essential as possible
-
-// draw / render
-//    This function should draw objects on screen based on movement
-
-// movement
-//    perform movement calculations for screen, worm, apple
-
-// collision detection
-//    Self
-//        Game Over Screen
-//    spaceJunk
-//        Grow worm
-//    Wall
-//        Game over screen
+// Tset high score
